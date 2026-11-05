@@ -1,0 +1,31 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [main]
+
+    push:
+        branches: [main]
+
+
+permissions:
+    contents: read
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions/setup-python@v5
+              with:
+                python-version: "3.12"
+            - run: pip install ansible-core ansible-lint
+            - run: ansible-playbook site.yml --syntax-check
+            - run: ansible-lint site.yml
+
+    simular:
+        needs: lint
+        runs-on: [self-hosted, lan]
+        steps:
+            - uses: actions/checkout@v7
+            - run: ansible-playbook site.yml --check --diff
