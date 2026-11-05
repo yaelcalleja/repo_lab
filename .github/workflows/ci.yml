@@ -14,6 +14,11 @@ permissions:
 jobs:
     lint:
         runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: lab_1
+
         steps:
             - uses: actions/checkout@v7
             - uses: actions/setup-python@v5
@@ -26,6 +31,11 @@ jobs:
     simular:
         needs: lint
         runs-on: [self-hosted, lan]
+
+        defaults:
+            run:
+                working-directory: lab_1
+
         steps:
             - uses: actions/checkout@v7
             - run: ansible-playbook site.yml --check --diff
